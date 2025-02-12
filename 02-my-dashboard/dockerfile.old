@@ -1,0 +1,22 @@
+FROM node:22-alpine
+
+# Configura el directorio de trabajo
+WORKDIR /app
+
+# Copia solo los archivos necesarios para la instalación
+COPY package.json package-lock.json ./ 
+
+# Instala las dependencias
+RUN npm install --force
+
+# Copia el resto de los archivos
+COPY . .
+
+# Construye la aplicación
+RUN npm run build
+
+# Expone el puerto de Next.js
+EXPOSE 3000
+
+# Inicia la aplicación en modo producción
+CMD ["npm", "start"]

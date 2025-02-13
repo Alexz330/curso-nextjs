@@ -7,6 +7,14 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+// En Build TIME
+export async function generateStaticParams() {
+  const static151Pokemon = Array.from({ length: 151 }).map(
+    (_, index) => `${index + 1}`
+  );
+  return static151Pokemon.map((id) => ({ id: id }));
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   try {
@@ -15,7 +23,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       title: `#${id}-${name}`,
       description: `#Pagina del pokemon ${name}`,
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Pokemon no encontrado",
       description: "El pokemon que buscas no existe",
@@ -26,7 +34,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 const getPokemon = async (id: string): Promise<Pokemon> => {
   try {
     const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
-      cache: "force-cache", // Todo
+      // cache: "force-cache", // Todo
       // next:{
       //   revalidate:60*60*30*6
       // }
@@ -34,7 +42,7 @@ const getPokemon = async (id: string): Promise<Pokemon> => {
     console.log(pokemon.name);
 
     return pokemon;
-  } catch (error) {
+  } catch {
     notFound();
   }
 };
